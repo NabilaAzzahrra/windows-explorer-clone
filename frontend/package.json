@@ -1,0 +1,28 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:e2e": "cypress open"
+  },
+  "dependencies": {
+    "vue": "latest",
+    "axios": "latest",
+    "lucide-vue-next": "latest",
+    "@vueuse/core": "latest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vue-tsc": "latest",
+    "vitest": "latest",
+    "@vue/test-utils": "latest",
+    "jsdom": "latest",
+    "cypress": "latest"
+  }
+}

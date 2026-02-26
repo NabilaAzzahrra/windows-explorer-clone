@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "db:push": "drizzle-kit push",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "elysia": "latest",
+    "@elysiajs/cors": "latest",
+    "@elysiajs/node": "latest",
+    "drizzle-orm": "latest",
+    "mysql2": "latest",
+    "tsx": "latest"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "drizzle-kit": "latest",
+    "@types/node": "latest",
+    "vitest": "latest"
+  }
+}
