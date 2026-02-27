@@ -52,4 +52,24 @@ describe('FolderService', () => {
         expect(result.folders).toEqual(mockSubFolders);
         expect(result.files).toEqual(mockFiles);
     });
+
+    it('should create a new folder correctly', async () => {
+        const mockNewFolder = { id: 3, name: 'New Folder', parentId: 1 };
+        (mockFolderRepo.create as any).mockResolvedValue(mockNewFolder);
+
+        const result = await service.createFolder(1, 'New Folder');
+
+        expect(mockFolderRepo.create).toHaveBeenCalledWith(1, 'New Folder');
+        expect(result).toEqual(mockNewFolder);
+    });
+
+    it('should create a new file correctly', async () => {
+        const mockNewFile = { id: 2, name: 'New File.txt', folderId: 1, size: 200, type: 'text' };
+        (mockFileRepo.create as any).mockResolvedValue(mockNewFile);
+
+        const result = await service.createFile(1, 'New File.txt', 200, 'text');
+
+        expect(mockFileRepo.create).toHaveBeenCalledWith(1, 'New File.txt', 200, 'text');
+        expect(result).toEqual(mockNewFile);
+    });
 });

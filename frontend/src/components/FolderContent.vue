@@ -78,6 +78,56 @@ const getFileIcon = (type: string) => {
   if (type === 'text/plain') return FileText;
   return File;
 };
+
+const emit = defineEmits(['folder-created']);
+
+const handleCreateFolder = async () => {
+  if (!props.folderId) return;
+  const name = prompt('Enter new folder name:');
+  if (!name || !name.trim()) return;
+
+  try {
+    await axios.post(`${API_BASE}/folders`, {
+      parentId: props.folderId,
+      name: name.trim()
+    });
+    // Refresh content
+    offset.value = 0;
+    fetchChildren(props.folderId);
+    emit('folder-created');
+  } catch (error) {
+    console.error('Failed to create folder:', error);
+    alert('Failed to create folder');
+  }
+};
+
+const handleCreateFile = async () => {
+  if (!props.folderId) return;
+  const name = prompt('Enter new file name (e.g., document.txt):');
+  if (!name || !name.trim()) return;
+
+  // Simple type inference based on extension
+  let type = 'application/octet-stream';
+  if (name.endsWith('.txt')) type = 'text/plain';
+  else if (name.match(/\.(jpg|jpeg|png|gif)$/i)) type = 'image/jpeg';
+  else if (name.endsWith('.mp3')) type = 'audio/mpeg';
+  else if (name.endsWith('.mp4')) type = 'video/mp4';
+
+  try {
+    await axios.post(`${API_BASE}/files`, {
+      folderId: props.folderId,
+      name: name.trim(),
+      size: Math.floor(Math.random() * 1000000), // Mock size
+      type
+    });
+    // Refresh content
+    offset.value = 0;
+    fetchChildren(props.folderId);
+  } catch (error) {
+    console.error('Failed to create file:', error);
+    alert('Failed to create file');
+  }
+};
 </script>
 
 <template>
@@ -88,6 +138,14 @@ const getFileIcon = (type: string) => {
         <Folder :size="16" class="root-icon" />
         <ChevronRight :size="14" class="separator" />
         <span class="current-path">{{ folderId ? 'Selected Folder' : 'Root' }}</span>
+      </div>
+      <div class="actions">
+        <button v-if="folderId" @click="handleCreateFolder" class="action-btn">
+          <Folder :size="14" /> New Folder
+        </button>
+        <button v-if="folderId" @click="handleCreateFile" class="action-btn">
+          <FileText :size="14" /> New File
+        </button>
       </div>
     </header>
 
@@ -172,6 +230,33 @@ const getFileIcon = (type: string) => {
   padding: 12px 24px;
   border-bottom: 1px solid var(--border-subtle);
   background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.action-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
 }
 
 .breadcrumbs {

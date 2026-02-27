@@ -7,6 +7,7 @@ export interface IFolderRepository {
     findById(id: number): Promise<any | undefined>;
     findByParentId(parentId: number | null): Promise<any[]>;
     search(query: string): Promise<any[]>;
+    create(parentId: number | null, name: string): Promise<any>;
 }
 
 export class FolderRepository implements IFolderRepository {
@@ -30,5 +31,13 @@ export class FolderRepository implements IFolderRepository {
         return await db.select()
             .from(folders)
             .where(like(folders.name, `%${query}%`));
+    }
+    // Create a new folder
+    async create(parentId: number | null, name: string) {
+        const result = await db.insert(folders).values({
+            parentId,
+            name,
+        });
+        return result;
     }
 }

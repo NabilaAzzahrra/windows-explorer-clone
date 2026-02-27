@@ -18,6 +18,24 @@ export const folderController = new Elysia({ prefix: '/api/v1' })
             offset: t.Optional(t.String())
         })
     })
+    .post('/folders', async ({ body }) => {
+        return await folderService.createFolder(body.parentId, body.name);
+    }, {
+        body: t.Object({
+            parentId: t.Union([t.Number(), t.Null()]),
+            name: t.String()
+        })
+    })
+    .post('/files', async ({ body }) => {
+        return await folderService.createFile(body.folderId, body.name, body.size, body.type);
+    }, {
+        body: t.Object({
+            folderId: t.Number(),
+            name: t.String(),
+            size: t.Number(),
+            type: t.String()
+        })
+    })
     .get('/search', ({ query: { q } }) => folderService.search(q), {
         query: t.Object({
             q: t.String()

@@ -70,7 +70,16 @@ export class FolderService {
             this.folderRepo.search(query),
             this.fileRepo.search(query)
         ]);
-
         return { folders: matchedFolders, files: matchedFiles };
+    }
+
+    // Create a new folder
+    async createFolder(parentId: number | null, name: string) {
+        return await this.folderRepo.create(parentId, name);
+    }
+
+    // Create a new file
+    async createFile(folderId: number, name: string, size: number, type: string) {
+        return await this.fileRepo.create(folderId, name, size, type);
     }
 }

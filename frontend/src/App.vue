@@ -91,6 +91,7 @@ onMounted(fetchFolders);
       <FolderContent 
         :folder-id="selectedFolderId" 
         :search-results="searchResults"
+        @folder-created="fetchFolders"
       />
     </main>
   </div>

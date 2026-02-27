@@ -5,6 +5,7 @@ import { eq, like } from 'drizzle-orm';
 export interface IFileRepository {
     findByFolderId(folderId: number, limit?: number, offset?: number): Promise<any[]>;
     search(query: string): Promise<any[]>;
+    create(folderId: number, name: string, size: number, type: string): Promise<any>;
 }
 
 export class FileRepository implements IFileRepository {
@@ -20,5 +21,15 @@ export class FileRepository implements IFileRepository {
         return await db.select()
             .from(files)
             .where(like(files.name, `%${query}%`));
+    }
+    // Create a new file
+    async create(folderId: number, name: string, size: number, type: string) {
+        const result = await db.insert(files).values({
+            folderId,
+            name,
+            size,
+            type,
+        });
+        return result;
     }
 }
